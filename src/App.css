@@ -1,18 +1,1 @@
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  background-color: #0f172a;
-}
-
-.title {
-  color: #f8fafc;
-  font-size: 28px;
-  font-weight: bold;
-  font-family: monospace;
-  letter-spacing: 0.1em;
-  margin: 0;
-}
+/* Tailwind handles all styling — no raw CSS needed */

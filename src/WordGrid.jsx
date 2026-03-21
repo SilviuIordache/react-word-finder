@@ -16,28 +16,13 @@ const grid = generateGrid(GRID_SIZE);
 
 export default function WordGrid() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+    <div className="flex flex-col gap-1">
       {grid.map((row, rowIndex) => (
-        <div key={rowIndex} style={{ display: 'flex', gap: '4px' }}>
+        <div key={rowIndex} className="flex gap-1">
           {row.map((letter, colIndex) => (
             <div
               key={colIndex}
-              style={{
-                width: '48px',
-                height: '48px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: '#1e293b',
-                border: '1px solid #334155',
-                borderRadius: '4px',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                color: '#f1f5f9',
-                fontFamily: 'monospace',
-                userSelect: 'none',
-                cursor: 'default',
-              }}
+              className="w-12 h-12 flex items-center justify-center bg-slate-800 border border-slate-700 rounded text-lg font-bold text-slate-100 font-mono select-none cursor-default"
             >
               {letter}
             </div>
