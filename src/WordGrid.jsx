@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Cell from './Cell';
+import { isValidWord } from './validator';
 
 const GRID_SIZE = 10;
 
@@ -69,13 +70,14 @@ function buildGrid(wordSet) {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function WordGrid({ wordSet, onWordFound }) {
+export default function WordGrid({ wordSet, onWordFound, onExtraWordFound, disabled = false }) {
   const [grid] = useState(() => buildGrid(wordSet));
   const [isDragging, setIsDragging] = useState(false);
   const [selectedCells, setSelectedCells] = useState([]);
   const [startCell, setStartCell] = useState(null);
   const [dragDirection, setDragDirection] = useState(null); // 'horizontal' | 'vertical' | null
   const [foundCells, setFoundCells] = useState([]);        // permanently green
+  const [extraFoundCells, setExtraFoundCells] = useState([]); // permanently yellow
   const [flashCells, setFlashCells] = useState([]);        // { row, col, type: 'invalid' }
 
   // End the drag when the pointer is released anywhere on the page
@@ -84,11 +86,16 @@ export default function WordGrid({ wordSet, onWordFound }) {
       if (!isDragging) return;
 
       const word = selectedCells.map(({ row, col }) => grid[row][col]).join('');
+      const normalizedWord = word.toLowerCase();
 
-      if (wordSet.has(word.toLowerCase())) {
+      if (wordSet.has(normalizedWord)) {
         // Planted word — keep highlighted green permanently
         setFoundCells(prev => [...prev, ...selectedCells]);
-        onWordFound(word.toLowerCase());
+        onWordFound(normalizedWord);
+      } else if (isValidWord(normalizedWord)) {
+        // Dictionary-valid accidental word — keep highlighted yellow permanently
+        setExtraFoundCells(prev => [...prev, ...selectedCells]);
+        onExtraWordFound(normalizedWord);
       } else {
         // Invalid — flash red then clear
         setFlashCells(selectedCells.map(c => ({ ...c, type: 'invalid' })));
@@ -102,9 +109,10 @@ export default function WordGrid({ wordSet, onWordFound }) {
     };
     window.addEventListener('pointerup', handlePointerUp);
     return () => window.removeEventListener('pointerup', handlePointerUp);
-  }, [isDragging, selectedCells, grid, wordSet, onWordFound]);
+  }, [isDragging, selectedCells, grid, wordSet, onWordFound, onExtraWordFound]);
 
   const handlePointerDown = (row, col) => {
+    if (disabled) return;
     setIsDragging(true);
     setStartCell({ row, col });
     setDragDirection(null);
@@ -112,6 +120,7 @@ export default function WordGrid({ wordSet, onWordFound }) {
   };
 
   const handlePointerEnter = (row, col) => {
+    if (disabled) return;
     if (!isDragging || !startCell) return;
 
     // Determine direction on first move away from the start cell
@@ -148,6 +157,7 @@ export default function WordGrid({ wordSet, onWordFound }) {
 
   const getCellStatus = (row, col) => {
     if (foundCells.some(c => c.row === row && c.col === col)) return 'found';
+    if (extraFoundCells.some(c => c.row === row && c.col === col)) return 'extra';
     const flash = flashCells.find(c => c.row === row && c.col === col);
     if (flash) return flash.type;
     if (selectedCells.some(c => c.row === row && c.col === col)) return 'selected';

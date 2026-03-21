@@ -6,13 +6,21 @@ function formatTime(seconds) {
   return `${m}:${s}`;
 }
 
-export default function GameHUD({ elapsedTime, foundByLength }) {
+export default function GameHUD({ elapsedTime, foundByLength, extraFoundCount }) {
   return (
     <div className="flex w-full max-w-120 flex-col items-center gap-4 px-1">
       <div className="font-mono text-sm tracking-wider text-slate-300">
         ⏱ <span className="text-lg font-bold text-white">{formatTime(elapsedTime)}</span>
       </div>
       <div className="flex w-full items-start justify-center gap-4 sm:gap-6">
+        <LengthTracker
+          label="EXTRA"
+          total={extraFoundCount}
+          found={extraFoundCount}
+          foundClassName="bg-amber-300"
+          emptyClassName="bg-transparent"
+          maxPerRow={5}
+        />
         {foundByLength.map(group => (
           <LengthTracker key={group.length} {...group} />
         ))}

@@ -1,0 +1,55 @@
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+  const s = (seconds % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function formatWord(word) {
+  return word.toUpperCase();
+}
+
+export default function GameWonModal({ elapsedTime, plantedWords, extraWords }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+      <div className="mx-4 flex max-h-[80vh] w-full max-w-md flex-col gap-6 overflow-y-auto rounded-xl border border-slate-600 bg-slate-800 p-8">
+        <div className="text-center">
+          <h1 className="font-mono text-3xl font-bold tracking-widest text-white">
+            Congratulations, you win!
+          </h1>
+          <p className="mt-4 text-sm text-slate-300">
+            You managed to find all the words in{' '}
+            <span className="font-mono font-bold text-white">{formatTime(elapsedTime)}</span> time
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-5 text-sm">
+          <section>
+            <h2 className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.25em] text-slate-400">
+              Planted words
+            </h2>
+            <ul className="flex flex-col gap-1 font-mono text-emerald-400">
+              {plantedWords.map(word => (
+                <li key={word}>- {formatWord(word)}</li>
+              ))}
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.25em] text-slate-400">
+              Extra words
+            </h2>
+            <ul className="flex flex-col gap-1 font-mono text-amber-300">
+              {extraWords.length > 0 ? (
+                extraWords.map(word => (
+                  <li key={word}>- {formatWord(word)}</li>
+                ))
+              ) : (
+                <li className="text-slate-500">- NONE</li>
+              )}
+            </ul>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+}

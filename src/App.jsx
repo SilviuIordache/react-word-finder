@@ -3,6 +3,7 @@ import { generateWordSet } from './words';
 import WordGrid from './WordGrid';
 import StartModal from './StartModal';
 import GameHUD from './GameHUD';
+import GameWonModal from './GameWonModal';
 import './App.css';
 
 function buildLengthStats(words) {
@@ -20,8 +21,10 @@ function buildLengthStats(words) {
 export default function App() {
   const [wordSet] = useState(() => generateWordSet());
   const [gameStarted, setGameStarted] = useState(false);
+  const [gameWon, setGameWon] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [foundWords, setFoundWords] = useState(new Set());
+  const [extraWords, setExtraWords] = useState(new Set());
 
   const wordLengthStats = buildLengthStats(wordSet);
   const foundByLength = wordLengthStats.map(({ length, total }) => ({
@@ -31,12 +34,22 @@ export default function App() {
   }));
 
   useEffect(() => {
-    if (!gameStarted) return;
+    if (!gameStarted || gameWon) return;
     const interval = setInterval(() => {
       setElapsedTime(t => t + 1);
     }, 1000);
     return () => clearInterval(interval);
-  }, [gameStarted]);
+  }, [gameStarted, gameWon]);
+
+  useEffect(() => {
+    if (!gameStarted || gameWon) return;
+    if (foundWords.size === wordSet.size) {
+      setGameWon(true);
+    }
+  }, [foundWords, gameStarted, gameWon, wordSet.size]);
+
+  const plantedWords = Array.from(wordSet).sort();
+  const foundExtraWords = Array.from(extraWords).sort();
 
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center gap-6">
@@ -47,14 +60,25 @@ export default function App() {
         />
       )}
 
+      {gameWon && (
+        <GameWonModal
+          elapsedTime={elapsedTime}
+          plantedWords={plantedWords}
+          extraWords={foundExtraWords}
+        />
+      )}
+
       <GameHUD
         elapsedTime={elapsedTime}
         foundByLength={foundByLength}
+        extraFoundCount={extraWords.size}
       />
 
       <WordGrid
         wordSet={wordSet}
+        disabled={!gameStarted || gameWon}
         onWordFound={word => setFoundWords(prev => new Set([...prev, word]))}
+        onExtraWordFound={word => setExtraWords(prev => new Set([...prev, word]))}
       />
     </div>
   );
