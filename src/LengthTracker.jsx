@@ -11,8 +11,8 @@ export default function LengthTracker({
   const circlesPerRow = maxPerRow ?? circleCount;
 
   return (
-    <div className="flex min-w-22 flex-col items-center gap-2">
-      <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-400">
+    <div className="flex w-full flex-col items-center gap-2">
+      <span className="text-center font-mono text-[11px] uppercase tracking-[0.2em] text-slate-400">
         {label ?? `${length}-letter`}
       </span>
       <div

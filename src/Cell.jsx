@@ -1,6 +1,6 @@
 const STATUS_STYLES = {
   found:    'bg-green-500 text-white',
-  extra:    'bg-slate-800 text-slate-100 ring-1 ring-inset ring-yellow-300',
+  extra:    'bg-slate-800 text-slate-100 ring-1 ring-inset ring-amber-100/60',
   selected: 'bg-indigo-500 text-white',
   invalid:  'bg-red-500 text-white',
   default:  'bg-slate-800 text-slate-100',

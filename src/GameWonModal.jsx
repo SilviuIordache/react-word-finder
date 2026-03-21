@@ -8,7 +8,7 @@ function formatWord(word) {
   return word.toUpperCase();
 }
 
-export default function GameWonModal({ elapsedTime, plantedWords, extraWords, onRestart }) {
+export default function GameWonModal({ elapsedTime, plantedWords, extraWords, onRestart, hasUsedHints }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
       <div className="mx-4 flex max-h-[80vh] w-full max-w-md flex-col gap-6 overflow-y-auto rounded-xl border border-slate-600 bg-slate-800 p-8">
@@ -20,6 +20,20 @@ export default function GameWonModal({ elapsedTime, plantedWords, extraWords, on
             You managed to find all the words in{' '}
             <span className="font-mono font-bold text-white">{formatTime(elapsedTime)}</span>
           </p>
+          {!hasUsedHints ? (
+            <p className="mt-3 font-mono text-sm font-bold uppercase tracking-[0.2em] text-emerald-400">
+              Perfect run
+            </p>
+          ) : (
+            <p className="mt-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
+              Hints used: Yes
+            </p>
+          )}
+          {!hasUsedHints && (
+            <p className="mt-2 text-sm text-slate-400">
+              You found all the words without using hints.
+            </p>
+          )}
         </div>
 
         <div className="grid gap-6 text-sm md:grid-cols-2">

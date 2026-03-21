@@ -25,6 +25,7 @@ export default function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameWon, setGameWon] = useState(false);
   const [showHints, setShowHints] = useState(false);
+  const [hasUsedHints, setHasUsedHints] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [foundWords, setFoundWords] = useState(new Set());
   const [extraWords, setExtraWords] = useState(new Set());
@@ -60,6 +61,7 @@ export default function App() {
     setGameStarted(true);
     setGameWon(false);
     setShowHints(false);
+    setHasUsedHints(false);
     setElapsedTime(0);
     setFoundWords(new Set());
     setExtraWords(new Set());
@@ -80,6 +82,7 @@ export default function App() {
           plantedWords={plantedWords}
           extraWords={foundExtraWords}
           onRestart={restartGame}
+          hasUsedHints={hasUsedHints}
         />
       )}
 
@@ -96,7 +99,12 @@ export default function App() {
         foundByLength={foundByLength}
         extraFoundCount={extraWords.size}
         canOpenHints={gameStarted && !gameWon}
-        onOpenHints={() => setShowHints(true)}
+        canRestart={gameStarted}
+        onOpenHints={() => {
+          setHasUsedHints(true);
+          setShowHints(true);
+        }}
+        onRestart={restartGame}
       />
 
       <WordGrid
