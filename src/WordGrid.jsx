@@ -166,9 +166,12 @@ export default function WordGrid({ wordSet, onWordFound, onExtraWordFound, disab
 
   return (
     // touch-action: none prevents the browser from hijacking the drag as a scroll on mobile
-    <div className="border border-slate-600 divide-y divide-slate-600" style={{ touchAction: 'none' }}>
+    <div
+      className="w-full max-w-[480px] border border-slate-600 divide-y divide-slate-600"
+      style={{ touchAction: 'none' }}
+    >
       {grid.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex divide-x divide-slate-600">
+        <div key={rowIndex} className="grid grid-cols-10 divide-x divide-slate-600">
           {row.map((letter, colIndex) => (
             <Cell
               key={colIndex}

@@ -9,7 +9,7 @@ const STATUS_STYLES = {
 export default function Cell({ letter, row, col, status = 'default', onPointerDown, onPointerEnter }) {
   return (
     <div
-      className={`w-12 h-12 flex items-center justify-center text-lg font-bold font-mono select-none cursor-default transition-colors ${STATUS_STYLES[status]}`}
+      className={`flex aspect-square w-full items-center justify-center text-base font-bold font-mono select-none cursor-default transition-colors sm:text-lg ${STATUS_STYLES[status]}`}
       onPointerDown={() => onPointerDown(row, col)}
       onPointerEnter={() => onPointerEnter(row, col)}
     >

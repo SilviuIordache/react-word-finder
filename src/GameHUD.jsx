@@ -16,14 +16,14 @@ export default function GameHUD({
   canRestart,
 }) {
   return (
-    <div className="flex w-full max-w-120 flex-col gap-5 px-1">
-      <div className="flex w-full items-center justify-between">
+    <div className="flex w-full max-w-[480px] flex-col gap-4 px-1 sm:gap-5">
+      <div className="flex w-full flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={onOpenHints}
             disabled={!canOpenHints}
-            className="flex h-8 items-center justify-center gap-1 rounded-full border border-slate-600 px-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-slate-300 transition-colors hover:border-slate-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex h-8 items-center justify-center gap-1 rounded-full border border-slate-600 px-3 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-300 transition-colors hover:border-slate-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-40 sm:text-xs sm:tracking-[0.2em]"
             aria-label="Open hints"
           >
             <span>?</span>
@@ -33,17 +33,17 @@ export default function GameHUD({
             type="button"
             onClick={onRestart}
             disabled={!canRestart}
-            className="flex h-8 items-center justify-center rounded-full border border-slate-600 px-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-slate-300 transition-colors hover:border-slate-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex h-8 items-center justify-center rounded-full border border-slate-600 px-3 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-300 transition-colors hover:border-slate-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-40 sm:text-xs sm:tracking-[0.2em]"
             aria-label="Restart game"
           >
             Restart
           </button>
         </div>
-        <div className="font-mono text-sm tracking-wider text-slate-300">
-          ⏱ <span className="text-lg font-bold text-white">{formatTime(elapsedTime)}</span>
+        <div className="ml-auto font-mono text-sm tracking-wider text-slate-300">
+          ⏱ <span className="text-base font-bold text-white sm:text-lg">{formatTime(elapsedTime)}</span>
         </div>
       </div>
-      <div className="grid w-full grid-cols-4 items-start gap-4">
+      <div className="grid w-full grid-cols-2 items-start gap-x-4 gap-y-5 sm:grid-cols-4 sm:gap-4">
         <LengthTracker
           label="EXTRA"
           total={extraFoundCount}

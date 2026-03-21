@@ -68,7 +68,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center gap-6">
+    <div className="flex min-h-screen flex-col items-center gap-5 bg-slate-900 px-3 py-4 sm:justify-center sm:gap-6 sm:px-4 sm:py-6">
       {!gameStarted && (
         <StartModal
           totalWords={wordSet.size}
