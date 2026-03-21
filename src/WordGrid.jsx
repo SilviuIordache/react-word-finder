@@ -1,3 +1,36 @@
+import { useState } from 'react';
+import commonWords from './commonWords.json';
+
+function getRandomWord(letterCount) {
+  const pool = commonWords[letterCount];
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function generateWordSet() {
+  const wordSet = new Set();
+
+  const targets = [
+    { count: 5, length: 3 },
+    { count: 4, length: 4 },
+    { count: 3, length: 5 },
+  ];
+
+  for (const { count, length } of targets) {
+    let added = 0;
+    while (added < count) {
+      const word = getRandomWord(length);
+      if (!wordSet.has(word)) {
+        wordSet.add(word);
+        added++;
+      }
+    }
+  }
+
+  return wordSet;
+}
+
+console.log('Game words:', generateWordSet());
+
 const GRID_SIZE = 10;
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -12,9 +45,9 @@ function generateGrid(size) {
   );
 }
 
-const grid = generateGrid(GRID_SIZE);
-
 export default function WordGrid() {
+  const [grid] = useState(() => generateGrid(GRID_SIZE));
+
   return (
     <div className="flex flex-col gap-1">
       {grid.map((row, rowIndex) => (
