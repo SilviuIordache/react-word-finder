@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Cell from './Cell';
 
 const GRID_SIZE = 10;
@@ -71,9 +71,40 @@ function buildGrid(wordSet) {
 
 export default function WordGrid({ wordSet }) {
   const [grid] = useState(() => buildGrid(wordSet));
+  const [isDragging, setIsDragging] = useState(false);
+  const [selectedCells, setSelectedCells] = useState([]);
+
+  // End the drag when the pointer is released anywhere on the page
+  useEffect(() => {
+    const handlePointerUp = () => {
+      if (!isDragging) return;
+      setIsDragging(false);
+      console.log('Selected word:', selectedCells.map(({ row, col }) => grid[row][col]).join(''));
+      setSelectedCells([]);
+    };
+    window.addEventListener('pointerup', handlePointerUp);
+    return () => window.removeEventListener('pointerup', handlePointerUp);
+  }, [isDragging, selectedCells, grid]);
+
+  const handlePointerDown = (row, col) => {
+    setIsDragging(true);
+    setSelectedCells([{ row, col }]);
+  };
+
+  const handlePointerEnter = (row, col) => {
+    if (!isDragging) return;
+    setSelectedCells(prev => {
+      if (prev.some(c => c.row === row && c.col === col)) return prev;
+      return [...prev, { row, col }];
+    });
+  };
+
+  const isSelected = (row, col) =>
+    selectedCells.some(c => c.row === row && c.col === col);
 
   return (
-    <div className="border border-slate-600 divide-y divide-slate-600">
+    // touch-action: none prevents the browser from hijacking the drag as a scroll on mobile
+    <div className="border border-slate-600 divide-y divide-slate-600" style={{ touchAction: 'none' }}>
       {grid.map((row, rowIndex) => (
         <div key={rowIndex} className="flex divide-x divide-slate-600">
           {row.map((letter, colIndex) => (
@@ -82,7 +113,9 @@ export default function WordGrid({ wordSet }) {
               letter={letter}
               row={rowIndex}
               col={colIndex}
-              onPointerDown={(r, c) => console.log('pointerDown', { r, c, letter })}
+              selected={isSelected(rowIndex, colIndex)}
+              onPointerDown={handlePointerDown}
+              onPointerEnter={handlePointerEnter}
             />
           ))}
         </div>

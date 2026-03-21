@@ -1,11 +1,10 @@
-export default function Cell({ letter, row, col, onPointerDown }) {
+export default function Cell({ letter, row, col, selected, onPointerDown, onPointerEnter }) {
   return (
     <div
-      className="w-12 h-12 flex items-center justify-center bg-slate-800 text-lg font-bold text-slate-100 font-mono select-none cursor-default"
-      onPointerDown={() => {
-        console.log('pointerDown', { row, col, letter });
-        onPointerDown(row, col);
-      }}
+      className={`w-12 h-12 flex items-center justify-center text-lg font-bold font-mono select-none cursor-default transition-colors
+        ${selected ? 'bg-indigo-500 text-white' : 'bg-slate-800 text-slate-100'}`}
+      onPointerDown={() => onPointerDown(row, col)}
+      onPointerEnter={() => onPointerEnter(row, col)}
     >
       {letter}
     </div>
