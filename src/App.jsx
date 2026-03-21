@@ -5,11 +5,30 @@ import StartModal from './StartModal';
 import GameHUD from './GameHUD';
 import './App.css';
 
+function buildLengthStats(words) {
+  const counts = new Map();
+
+  for (const word of words) {
+    counts.set(word.length, (counts.get(word.length) ?? 0) + 1);
+  }
+
+  return Array.from(counts.entries())
+    .sort(([a], [b]) => a - b)
+    .map(([length, total]) => ({ length, total }));
+}
+
 export default function App() {
   const [wordSet] = useState(() => generateWordSet());
   const [gameStarted, setGameStarted] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [foundWords, setFoundWords] = useState(new Set());
+
+  const wordLengthStats = buildLengthStats(wordSet);
+  const foundByLength = wordLengthStats.map(({ length, total }) => ({
+    length,
+    total,
+    found: Array.from(foundWords).filter(word => word.length === length).length,
+  }));
 
   useEffect(() => {
     if (!gameStarted) return;
@@ -30,8 +49,7 @@ export default function App() {
 
       <GameHUD
         elapsedTime={elapsedTime}
-        foundCount={foundWords.size}
-        totalWords={wordSet.size}
+        foundByLength={foundByLength}
       />
 
       <WordGrid
