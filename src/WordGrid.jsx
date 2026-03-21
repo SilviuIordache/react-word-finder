@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { isValidWord } from './validator';
 
 const GRID_SIZE = 10;
 
