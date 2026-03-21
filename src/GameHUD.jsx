@@ -6,11 +6,23 @@ function formatTime(seconds) {
   return `${m}:${s}`;
 }
 
-export default function GameHUD({ elapsedTime, foundByLength, extraFoundCount }) {
+export default function GameHUD({ elapsedTime, foundByLength, extraFoundCount, onOpenHints, canOpenHints }) {
   return (
     <div className="flex w-full max-w-120 flex-col items-center gap-4 px-1">
-      <div className="font-mono text-sm tracking-wider text-slate-300">
-        ⏱ <span className="text-lg font-bold text-white">{formatTime(elapsedTime)}</span>
+      <div className="flex w-full items-center justify-between">
+        <button
+          type="button"
+          onClick={onOpenHints}
+          disabled={!canOpenHints}
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-600 font-mono text-sm font-bold text-slate-300 transition-colors hover:border-slate-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+          aria-label="Open hints"
+        >
+          ?
+        </button>
+        <div className="font-mono text-sm tracking-wider text-slate-300">
+          ⏱ <span className="text-lg font-bold text-white">{formatTime(elapsedTime)}</span>
+        </div>
+        <div className="h-8 w-8" />
       </div>
       <div className="flex w-full items-start justify-center gap-4 sm:gap-6">
         <LengthTracker

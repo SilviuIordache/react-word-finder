@@ -8,21 +8,21 @@ function formatWord(word) {
   return word.toUpperCase();
 }
 
-export default function GameWonModal({ elapsedTime, plantedWords, extraWords }) {
+export default function GameWonModal({ elapsedTime, plantedWords, extraWords, onRestart }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
       <div className="mx-4 flex max-h-[80vh] w-full max-w-md flex-col gap-6 overflow-y-auto rounded-xl border border-slate-600 bg-slate-800 p-8">
         <div className="text-center">
           <h1 className="font-mono text-3xl font-bold tracking-widest text-white">
-            Congratulations, you win!
+            You win! 🎉
           </h1>
           <p className="mt-4 text-sm text-slate-300">
             You managed to find all the words in{' '}
-            <span className="font-mono font-bold text-white">{formatTime(elapsedTime)}</span> time
+            <span className="font-mono font-bold text-white">{formatTime(elapsedTime)}</span>
           </p>
         </div>
 
-        <div className="flex flex-col gap-5 text-sm">
+        <div className="grid gap-6 text-sm md:grid-cols-2">
           <section>
             <h2 className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.25em] text-slate-400">
               Planted words
@@ -49,6 +49,14 @@ export default function GameWonModal({ elapsedTime, plantedWords, extraWords }) 
             </ul>
           </section>
         </div>
+
+        <button
+          type="button"
+          onClick={onRestart}
+          className="rounded-lg bg-indigo-600 py-3 font-mono font-bold tracking-widest text-white transition-colors hover:bg-indigo-500"
+        >
+          Restart
+        </button>
       </div>
     </div>
   );

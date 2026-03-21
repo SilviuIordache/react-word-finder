@@ -4,6 +4,7 @@ import WordGrid from './WordGrid';
 import StartModal from './StartModal';
 import GameHUD from './GameHUD';
 import GameWonModal from './GameWonModal';
+import HintModal from './HintModal';
 import './App.css';
 
 function buildLengthStats(words) {
@@ -19,9 +20,11 @@ function buildLengthStats(words) {
 }
 
 export default function App() {
-  const [wordSet] = useState(() => generateWordSet());
+  const [wordSet, setWordSet] = useState(() => generateWordSet());
+  const [gameKey, setGameKey] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameWon, setGameWon] = useState(false);
+  const [showHints, setShowHints] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [foundWords, setFoundWords] = useState(new Set());
   const [extraWords, setExtraWords] = useState(new Set());
@@ -51,6 +54,17 @@ export default function App() {
   const plantedWords = Array.from(wordSet).sort();
   const foundExtraWords = Array.from(extraWords).sort();
 
+  const restartGame = () => {
+    setWordSet(generateWordSet());
+    setGameKey(prev => prev + 1);
+    setGameStarted(true);
+    setGameWon(false);
+    setShowHints(false);
+    setElapsedTime(0);
+    setFoundWords(new Set());
+    setExtraWords(new Set());
+  };
+
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center gap-6">
       {!gameStarted && (
@@ -65,6 +79,15 @@ export default function App() {
           elapsedTime={elapsedTime}
           plantedWords={plantedWords}
           extraWords={foundExtraWords}
+          onRestart={restartGame}
+        />
+      )}
+
+      {showHints && (
+        <HintModal
+          plantedWords={plantedWords}
+          foundWords={foundWords}
+          onClose={() => setShowHints(false)}
         />
       )}
 
@@ -72,9 +95,12 @@ export default function App() {
         elapsedTime={elapsedTime}
         foundByLength={foundByLength}
         extraFoundCount={extraWords.size}
+        canOpenHints={gameStarted && !gameWon}
+        onOpenHints={() => setShowHints(true)}
       />
 
       <WordGrid
+        key={gameKey}
         wordSet={wordSet}
         disabled={!gameStarted || gameWon}
         onWordFound={word => setFoundWords(prev => new Set([...prev, word]))}

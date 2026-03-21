@@ -156,11 +156,11 @@ export default function WordGrid({ wordSet, onWordFound, onExtraWordFound, disab
   };
 
   const getCellStatus = (row, col) => {
-    if (foundCells.some(c => c.row === row && c.col === col)) return 'found';
-    if (extraFoundCells.some(c => c.row === row && c.col === col)) return 'extra';
+    if (selectedCells.some(c => c.row === row && c.col === col)) return 'selected';
     const flash = flashCells.find(c => c.row === row && c.col === col);
     if (flash) return flash.type;
-    if (selectedCells.some(c => c.row === row && c.col === col)) return 'selected';
+    if (foundCells.some(c => c.row === row && c.col === col)) return 'found';
+    if (extraFoundCells.some(c => c.row === row && c.col === col)) return 'extra';
     return 'default';
   };
 
