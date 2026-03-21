@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Cell from './Cell';
 import { isValidWord } from './validator';
 
@@ -71,6 +71,7 @@ function buildGrid(wordSet) {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function WordGrid({ wordSet, onWordFound, onExtraWordFound, disabled = false }) {
+  const gridRef = useRef(null);
   const [grid] = useState(() => buildGrid(wordSet));
   const [isDragging, setIsDragging] = useState(false);
   const [selectedCells, setSelectedCells] = useState([]);
@@ -155,6 +156,20 @@ export default function WordGrid({ wordSet, onWordFound, onExtraWordFound, disab
     setSelectedCells(cells);
   };
 
+  const handlePointerMove = event => {
+    if (disabled || !isDragging || !gridRef.current) return;
+
+    const target = document.elementFromPoint(event.clientX, event.clientY);
+    const cell = target?.closest?.('[data-row][data-col]');
+
+    if (!cell || !gridRef.current.contains(cell)) return;
+
+    const row = Number(cell.dataset.row);
+    const col = Number(cell.dataset.col);
+
+    handlePointerEnter(row, col);
+  };
+
   const getCellStatus = (row, col) => {
     if (selectedCells.some(c => c.row === row && c.col === col)) return 'selected';
     const flash = flashCells.find(c => c.row === row && c.col === col);
@@ -167,8 +182,10 @@ export default function WordGrid({ wordSet, onWordFound, onExtraWordFound, disab
   return (
     // touch-action: none prevents the browser from hijacking the drag as a scroll on mobile
     <div
+      ref={gridRef}
       className="w-full max-w-[480px] border border-slate-600 divide-y divide-slate-600"
       style={{ touchAction: 'none' }}
+      onPointerMove={handlePointerMove}
     >
       {grid.map((row, rowIndex) => (
         <div key={rowIndex} className="grid grid-cols-10 divide-x divide-slate-600">
