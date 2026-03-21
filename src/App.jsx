@@ -34,7 +34,10 @@ export default function App() {
         totalWords={wordSet.size}
       />
 
-      <WordGrid wordSet={wordSet} />
+      <WordGrid
+        wordSet={wordSet}
+        onWordFound={word => setFoundWords(prev => new Set([...prev, word]))}
+      />
     </div>
   );
 }
