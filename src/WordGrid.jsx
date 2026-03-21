@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Cell from './Cell';
 
 const GRID_SIZE = 10;
 
@@ -76,12 +77,13 @@ export default function WordGrid({ wordSet }) {
       {grid.map((row, rowIndex) => (
         <div key={rowIndex} className="flex divide-x divide-slate-600">
           {row.map((letter, colIndex) => (
-            <div
+            <Cell
               key={colIndex}
-              className="w-12 h-12 flex items-center justify-center bg-slate-800 text-lg font-bold text-slate-100 font-mono select-none cursor-default"
-            >
-              {letter}
-            </div>
+              letter={letter}
+              row={rowIndex}
+              col={colIndex}
+              onPointerDown={(r, c) => console.log('pointerDown', { r, c, letter })}
+            />
           ))}
         </div>
       ))}
