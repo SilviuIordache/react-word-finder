@@ -1,40 +1,19 @@
 import { useState } from 'react';
-import commonWords from './commonWords.json';
 import { isValidWord } from './validator';
 
 const GRID_SIZE = 10;
 
-// ─── Word set generation ──────────────────────────────────────────────────────
-
-function getRandomWord(letterCount) {
-  const pool = commonWords[letterCount];
-  return pool[Math.floor(Math.random() * pool.length)];
-}
-
-function generateWordSet() {
-  const wordSet = new Set();
-
-  const targets = [
-    { count: 5, length: 3 },
-    { count: 4, length: 4 },
-    { count: 3, length: 5 },
-  ];
-
-  for (const { count, length } of targets) {
-    let added = 0;
-    while (added < count) {
-      const word = getRandomWord(length);
-      if (!wordSet.has(word)) {
-        wordSet.add(word);
-        added++;
-      }
-    }
-  }
-
-  return wordSet;
-}
-
 // ─── Grid population ──────────────────────────────────────────────────────────
+
+const VOWELS = 'AEIOU';
+const CONSONANTS = 'BCDFGHJKLMNPQRSTVWXYZ';
+const VOWEL_PROBABILITY = 0.5;
+
+function randomFiller() {
+  return Math.random() < VOWEL_PROBABILITY
+    ? VOWELS[Math.floor(Math.random() * VOWELS.length)]
+    : CONSONANTS[Math.floor(Math.random() * CONSONANTS.length)];
+}
 
 function buildGrid(wordSet) {
   // Start with an empty grid of nulls
@@ -78,16 +57,20 @@ function buildGrid(wordSet) {
     }
   }
 
+  // Fill remaining empty cells with weighted random letters
+  for (let r = 0; r < GRID_SIZE; r++) {
+    for (let c = 0; c < GRID_SIZE; c++) {
+      if (grid[r][c] === null) grid[r][c] = randomFiller();
+    }
+  }
+
   return grid;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function WordGrid() {
-  const [grid] = useState(() => {
-    const wordSet = generateWordSet();
-    return buildGrid(wordSet);
-  });
+export default function WordGrid({ wordSet }) {
+  const [grid] = useState(() => buildGrid(wordSet));
 
   return (
     <div className="border border-slate-600 divide-y divide-slate-600">
@@ -98,7 +81,7 @@ export default function WordGrid() {
               key={colIndex}
               className="w-12 h-12 flex items-center justify-center bg-slate-800 text-lg font-bold text-slate-100 font-mono select-none cursor-default"
             >
-              {letter ?? '·'}
+              {letter}
             </div>
           ))}
         </div>
